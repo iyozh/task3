@@ -4,8 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Game {
-    public String defineWinner(String[] moves, String userMove, String computerMove) {
-        List<String> movesList = Arrays.asList(moves);
+    public String[][] gameScheme;
+
+    public void buildGameScheme(String[] moves) {
         String[][] gameMatrix = new String[moves.length][moves.length];
         int numOfMiddleElement = moves.length / 2;
         int winsAmount = 0;
@@ -27,6 +28,10 @@ public class Game {
                     gameMatrix[i][j] = win;
             }
         }
-        return  gameMatrix[movesList.indexOf(userMove)][movesList.indexOf(computerMove)];
+        this.gameScheme = gameMatrix;
+    }
+    public String defineWinner(String[]moves,String userMove, String computerMove) {
+        List<String> movesList = Arrays.asList(moves);
+        return this.gameScheme[movesList.indexOf(userMove)][movesList.indexOf(computerMove)];
     }
 }

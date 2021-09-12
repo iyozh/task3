@@ -2,15 +2,24 @@ package com.company;
 
 import com.github.freva.asciitable.AsciiTable;
 
-public class HelpTable {
-    public void generateHelpTable() {
-        String[] headers = {"", "Name", "Diameter", "Mass", "Atmosphere"};
-        String[][] data = {
-                {"1", "Mercury", "0.382", "0.06", "minimal"},
-                {"2", "Venus", "0.949", "0.82", "Carbon dioxide, Nitrogen"},
-                {"3", "Earth", "1.000", "1.00", "Nitrogen, Oxygen, Argon"},
-                {"4", "Mars", "0.532", "0.11", "Carbon dioxide, Nitrogen, Argon"}};
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-        System.out.println(AsciiTable.getTable(headers, data));
+public class HelpTable {
+    public void generateHelpTable(String[] headers,String[][] gameScheme) {
+        List<String> headersForTable = new ArrayList<>();;
+        headersForTable.add(0, "YOU / PC");
+        headersForTable.addAll(Arrays.stream(headers).toList());
+        int stringTableNum = 0;
+        for (String move: headers) {
+            List<String> tableString = new ArrayList<>();
+            tableString.add(0, move);
+            tableString.addAll(Arrays.stream(gameScheme[stringTableNum]).toList());
+            gameScheme[stringTableNum] = tableString.toArray(new String[tableString.size()]);
+            stringTableNum++;
+        }
+        String[] finalHeaders = headersForTable.toArray(new String[headersForTable.size()]);
+        System.out.println(AsciiTable.getTable(finalHeaders, gameScheme));
     }
 }

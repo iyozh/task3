@@ -7,6 +7,15 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeyException {
+        HashSet<String> set = new HashSet<>();
+        Collections.addAll(set, args);
+        boolean isDuplicate = args.length != set.size();
+        if (args.length < 3 || isDuplicate || args.length % 2 == 0) {
+            System.out.println("Please, enter the correct data: it must be several non-repeating strings " +
+                    "(your moves), for example 'paper rock paper' or '1 2 3 4 5' ");
+            System.exit(0);
+        }
+
         HMACGenerator generator = new HMACGenerator();
         byte[] bytes = generator.generateBytes();
         String secretKey = generator.toHex(bytes);
@@ -15,14 +24,7 @@ public class Main {
         String computerMove = argsList.get(random.nextInt(argsList.size()));
         byte[] macBytes = generator.generateHMAC(computerMove, bytes);
         System.out.format("HMAC:\n%s\n",generator.toHex(macBytes).toUpperCase());
-        HashSet<String> set = new HashSet<>();
-        Collections.addAll(set, args);
-        boolean isDuplicate = args.length != set.size();
-        if (args.length < 3 || isDuplicate) {
-            System.out.println("Please, enter the correct data: it must be several non-repeating strings " +
-                    "(your moves), for example 'paper rock paper' or '1 2 3 4 5' ");
-            System.exit(0);
-        }
+
         System.out.println("Available moves:");
         HashMap<String,String> menu = new HashMap<>();
         int paragraph = 1;
@@ -41,20 +43,28 @@ public class Main {
         String menuItem = scanner.next();
         scanner.close();
         String userMove = menu.get(menuItem);
+
+        Game game = new Game();
+        game.buildGameScheme(args);
+
+
         if (userMove == null) {
             System.out.println("No such menu item.Try again");
             System.exit(0);
         }
-        System.out.format("Your choice: %s\n", userMove);
-        System.out.format("Computer choice: %s\n", computerMove);
-        if (userMove.equals("0"))
+
+        if (userMove.equals("exit")) {
             System.exit(0);
-        else if (userMove.equals("?")) {
+        }
+
+        else if (userMove.equals("help")) {
             HelpTable helpTable = new HelpTable();
-            helpTable.generateHelpTable();
+            helpTable.generateHelpTable(args,game.gameScheme);
+            System.exit(0);
         }
         else {
-            Game game = new Game();
+            System.out.format("Your choice: %s\n", userMove);
+            System.out.format("Computer choice: %s\n", computerMove);
             String winner = game.defineWinner(args, userMove, computerMove);
             System.out.println(winner);
             System.out.format("HMAC Key: %s", secretKey.toUpperCase());

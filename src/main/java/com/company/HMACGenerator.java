@@ -9,8 +9,6 @@ import java.security.SecureRandom;
 
 public class HMACGenerator {
     private static final String HMAC_ALGO = "HmacSHA256";
-    public String secretKey;
-    public byte[] macBytes;
     public byte[] generateBytes() {
         final int KEY_SIZE = 128 / 8;
         byte []bytes = new byte[KEY_SIZE];
